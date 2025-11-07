@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inscription - Gestion de Présence</title>
+<style>
+    /* Reset de base */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body, html {
+        height: 100%;
+        font-family: Arial, sans-serif;
+        background: url('https://images.unsplash.com/photo-1581091870626-cf69b3b4bbf6?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+        background-size: cover;
+        padding-bottom: 60px; /* espace pour footer fixe */
+        color: white;
+    }
+
+    /* Overlay sombre pour lisibilité */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: -1;
+    }
+
+    header {
+        background-color: rgba(0, 68, 204, 0.85);
+        padding: 20px;
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 140px); /* header + footer */
+        padding: 20px;
+    }
+
+    .register-card {
+        background-color: rgba(255,255,255,0.95);
+        color: #0044cc;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .register-card h2 {
+        margin-bottom: 20px;
+        font-size: 2em;
+    }
+
+    .register-card input, .register-card select, .register-card button {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 1em;
+    }
+
+    .register-card button {
+        background-color: #0044cc;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .register-card button:hover {
+        background-color: #003399;
+        transform: scale(1.05);
+    }
+
+    .login {
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .login a {
+        color: #0044cc;
+        text-decoration: none;
+    }
+
+    .login a:hover {
+        text-decoration: underline;
+    }
+
+    footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        padding: 15px;
+        background-color: rgba(0, 68, 204, 0.85);
+        color: white;
+        box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(20px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+
+    @media (max-width: 500px) {
+        .register-card h2 {
+            font-size: 1.5em;
+        }
+        .register-card input, .register-card select, .register-card button {
+            padding: 10px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    Gestion de Présence - Université
+</header>
+
+<main>
+    <div class="register-card">
+        <h2>Inscription</h2>
+        <input type="text" id="name" placeholder="Nom complet" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Mot de passe" required>
+        <input type="password" id="confirmPassword" placeholder="Confirmer le mot de passe" required>
+        <select id="role">
+            <option value="prof">Professeur</option>
+            <option value="admin">Administrateur</option>
+        </select>
+        <button id="registerBtn">S'inscrire</button>
+        <div class="login">
+            Déjà inscrit ? <a href="login.html">Se connecter</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    &copy; 2025 Université - Tous droits réservés
+</footer>
+
+<script>
+    if(!localStorage.getItem('users')){
+        localStorage.setItem('users', JSON.stringify([
+            {name:'Admin', email:'admin@uni.com', password:'admin123', role:'admin'},
+            {name:'Professeur', email:'prof@uni.com', password:'prof123', role:'prof'}
+        ]));
+    }
+
+    document.getElementById('registerBtn').addEventListener('click', () => {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const confirmPassword = document.getElementById('confirmPassword').value.trim();
+        const role = document.getElementById('role').value;
+
+        if(!name || !email || !password || !confirmPassword){
+            alert("Veuillez remplir tous les champs !");
+            return;
+        }
+
+        if(password !== confirmPassword){
+            alert("Les mots de passe ne correspondent pas !");
+            return;
+        }
+
+        let users = JSON.parse(localStorage.getItem('users'));
+        if(users.some(u => u.email === email)){
+            alert("Cet email est déjà utilisé !");
+            return;
+        }
+
+        users.push({name, email, password, role});
+        localStorage.setItem('users', JSON.stringify(users));
+        alert("Inscription réussie ! Vous pouvez maintenant vous connecter.");
+        window.location.href = "login.html";
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Admin</title>
+<!-- Font Awesome pour les icônes -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        display: flex;
+        min-height: 100vh;
+        background-color: #f2f7ff;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 220px;
+        background-color: #0044cc;
+        color: white;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        padding-top: 20px;
+        transition: all 0.3s;
+        position: fixed;
+        height: 100%;
+        overflow-y: auto;
+    }
+
+    .sidebar h2 {
+        color: white;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 20px;
+    }
+
+    .sidebar a {
+        color: white;
+        padding: 12px 20px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .sidebar a i {
+        margin-right: 10px;
+    }
+
+    .sidebar a.active {
+        background-color: #003399;
+    }
+
+    .sidebar a:hover {
+        background-color: #003399;
+    }
+
+    /* Main content */
+    .main-wrapper {
+        margin-left: 220px;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        transition: margin-left 0.3s;
+    }
+
+    .header {
+        background-color: #fff;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    }
+
+    .search-bar input {
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        width: 200px;
+    }
+
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: bold;
+        color: #0044cc;
+    }
+
+    .main-content {
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    .footer {
+        text-align: center;
+        background-color: #0044cc;
+        color: white;
+        padding: 10px 0;
+        margin-top: auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 60px;
+        }
+        .sidebar h2, .sidebar a span {
+            display: none;
+        }
+        .main-wrapper {
+            margin-left: 60px;
+        }
+        .search-bar input {
+            width: 120px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>Admin</h2>
+    <a data-page="students.html" class="active"><i class="fas fa-user-graduate"></i> <span>Étudiants</span></a>
+    <a data-page="courses.html"><i class="fas fa-book"></i> <span>Cours</span></a>
+    <a data-page="attendance.html"><i class="fas fa-calendar-check"></i> <span>Présences</span></a>
+    <a data-page="history.html"><i class="fas fa-history"></i> <span>Historique</span></a>
+    <a id="logout"><i class="fas fa-sign-out-alt"></i> <span>Déconnexion</span></a>
+</div>
+
+<div class="main-wrapper">
+    <div class="header">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Recherche...">
+        </div>
+        <div class="user-info">
+            <i class="fas fa-user-circle"></i> <span id="username">Admin</span>
+        </div>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <h1>Bienvenue, Admin !</h1>
+        <p>Le contenu des pages s’affichera ici.</p>
+    </div>
+
+    <div class="footer">
+        &copy;  2025 Université - Tous droits réservés
+    </div>
+</div>
+
+<script>
+    const links = document.querySelectorAll('.sidebar a[data-page]');
+    const mainContent = document.getElementById('mainContent');
+
+    // Fonction pour charger une page HTML dans mainContent
+    async function loadPage(url) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Erreur de chargement');
+            const html = await response.text();
+            mainContent.innerHTML = html;
+        } catch (err) {
+            mainContent.innerHTML = `<p style="color:red;">Impossible de charger la page.</p>`;
+            console.error(err);
+        }
+    }
+
+    // Gérer clic sur sidebar
+    links.forEach(link => {
+        link.addEventListener('click', () => {
+            links.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            const page = link.getAttribute('data-page');
+            loadPage(page);
+        });
+    });
+
+    // Déconnexion simulée
+    document.getElementById('logout').addEventListener('click', () => {
+        alert("Vous êtes déconnecté !");
+        window.location.href = "login.html";
+    });
+
+    // Recherche simple
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const filter = this.value.toLowerCase();
+        links.forEach(link => {
+            const text = link.textContent.toLowerCase();
+            link.style.display = text.includes(filter) ? 'flex' : 'none';
+        });
+    });
+
+    // Charger la page par défaut
+    loadPage('students.html');
+</script>
+
+</body>
+</html>

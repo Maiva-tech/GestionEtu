@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Connexion - Gestion de Présence</title>
+<style>
+    /* Reset de base */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body, html {
+        height: 100%;
+        font-family: Arial, sans-serif;
+        background: url('https://images.unsplash.com/photo-1581091870626-cf69b3b4bbf6?auto=format&fit=crop&w=1470&q=80') no-repeat center center fixed;
+        background-size: cover;
+        padding-bottom: 60px; /* espace pour le footer fixe */
+        color: white;
+    }
+
+    /* Overlay sombre pour lisibilité */
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(0,0,0,0.5);
+        z-index: -1;
+    }
+
+    header {
+        background-color: rgba(0, 68, 204, 0.85);
+        padding: 20px;
+        text-align: center;
+        font-size: 1.5em;
+        font-weight: bold;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+
+    main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: calc(100vh - 140px); /* header + footer */
+        padding: 20px;
+    }
+
+    .login-card {
+        background-color: rgba(255,255,255,0.95);
+        color: #0044cc;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
+    }
+
+    .login-card h2 {
+        margin-bottom: 20px;
+        font-size: 2em;
+    }
+
+    .login-card input, .login-card select, .login-card button {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 1em;
+    }
+
+    .login-card button {
+        background-color: #0044cc;
+        color: white;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .login-card button:hover {
+        background-color: #003399;
+        transform: scale(1.05);
+    }
+
+    .register {
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    .register a {
+        color: #0044cc;
+        text-decoration: none;
+    }
+
+    .register a:hover {
+        text-decoration: underline;
+    }
+
+    footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        padding: 15px;
+        background-color: rgba(0, 68, 204, 0.85);
+        color: white;
+        box-shadow: 0 -2px 8px rgba(0,0,0,0.3);
+    }
+
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(20px);}
+        to {opacity: 1; transform: translateY(0);}
+    }
+
+    @media (max-width: 500px) {
+        .login-card h2 {
+            font-size: 1.5em;
+        }
+        .login-card input, .login-card select, .login-card button {
+            padding: 10px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<header>
+    Gestion de Présence - Université
+</header>
+
+<main>
+    <div class="login-card">
+        <h2>Connexion</h2>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Mot de passe" required>
+        <select id="role">
+            <option value="prof">Professeur</option>
+            <option value="admin">Administrateur</option>
+        </select>
+        <button id="loginBtn">Se connecter</button>
+        <div class="register">
+            Pas encore inscrit ? <a href="register.html">S’inscrire</a>
+        </div>
+    </div>
+</main>
+
+<footer>
+    &copy; 2025 Université - Tous droits réservés
+</footer>
+
+<script>
+    if(!localStorage.getItem('users')){
+        localStorage.setItem('users', JSON.stringify([
+            {name:'Admin', email:'admin@uni.com', password:'admin123', role:'admin'},
+            {name:'Professeur', email:'prof@uni.com', password:'prof123', role:'prof'}
+        ]));
+    }
+
+    document.getElementById('loginBtn').addEventListener('click', () => {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const role = document.getElementById('role').value;
+
+        if(!email || !password){
+            alert("Veuillez remplir tous les champs !");
+            return;
+        }
+
+        const users = JSON.parse(localStorage.getItem('users'));
+        const user = users.find(u => u.email === email && u.password === password && u.role === role);
+
+        if(!user){
+            alert("Email, mot de passe ou rôle incorrect !");
+            return;
+        }
+
+        alert(`Connexion réussie ! Bienvenue ${user.name}`);
+        window.location.href = role === 'admin' ? "dashboard-admin.html" : "dashboard-prof.html";
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,169 @@
+<div class="content-wrapper">
+    <h2>Gestion des Étudiants</h2>
+
+    <!-- Formulaire ajout étudiant -->
+    <form id="addStudentForm" class="student-form">
+        <input type="text" id="studentName" placeholder="Nom complet" required>
+        <input type="email" id="studentEmail" placeholder="Email" required>
+        <input type="text" id="studentClass" placeholder="Classe" required>
+        <button type="submit">Ajouter</button>
+    </form>
+
+    <!-- Liste des étudiants -->
+    <table class="student-table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Classe</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="studentTableBody">
+            <!-- Les étudiants seront ajoutés ici -->
+        </tbody>
+    </table>
+</div>
+
+<style>
+/* Conteneur */
+.content-wrapper {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Titre */
+.content-wrapper h2 {
+    color: #0044cc;
+    margin-bottom: 20px;
+}
+
+/* Formulaire */
+.student-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.student-form input {
+    flex: 1 1 200px;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.student-form button {
+    background-color: #0044cc;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.student-form button:hover {
+    background-color: #003399;
+}
+
+/* Tableau */
+.student-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.student-table th, .student-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.student-table th {
+    background-color: #0044cc;
+    color: white;
+}
+
+.student-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.student-table button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+}
+
+.student-table button:nth-child(1) { /* Supprimer */
+    background-color: #e74c3c;
+}
+
+.student-table button:nth-child(1):hover {
+    background-color: #c0392b;
+}
+
+.student-table button:nth-child(2) { /* Modifier */
+    background-color: #f39c12;
+}
+
+.student-table button:nth-child(2):hover {
+    background-color: #d68910;
+}
+</style>
+
+<script>
+const form = document.getElementById('addStudentForm');
+const tableBody = document.getElementById('studentTableBody');
+
+let students = [];
+
+form.addEventListener('submit', e => {
+    e.preventDefault();
+    const student = {
+        name: document.getElementById('studentName').value,
+        email: document.getElementById('studentEmail').value,
+        classe: document.getElementById('studentClass').value
+    };
+    students.push(student);
+    renderTable();
+    form.reset();
+});
+
+function renderTable() {
+    tableBody.innerHTML = '';
+    students.forEach((s, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${s.name}</td>
+            <td>${s.email}</td>
+            <td>${s.classe}</td>
+            <td>
+                <button onclick="deleteStudent(${index})">Supprimer</button>
+                <button onclick="editStudent(${index})">Modifier</button>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+function deleteStudent(index) {
+    students.splice(index, 1);
+    renderTable();
+}
+
+function editStudent(index) {
+    const s = students[index];
+    document.getElementById('studentName').value = s.name;
+    document.getElementById('studentEmail').value = s.email;
+    document.getElementById('studentClass').value = s.classe;
+    deleteStudent(index); // Supprime l'ancien pour le remplacer à l'enregistrement
+}
+</script>

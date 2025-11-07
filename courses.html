@@ -1,0 +1,181 @@
+<div class="content-wrapper">
+    <h2>Gestion des Cours</h2>
+
+    <!-- Formulaire ajout cours -->
+    <form id="addCourseForm" class="student-form">
+        <input type="text" id="courseName" placeholder="Nom du cours" required>
+        <input type="text" id="courseProf" placeholder="Professeur" required>
+        <input type="text" id="courseClass" placeholder="Classe" required>
+        <input type="time" id="startTime" required>
+        <input type="time" id="endTime" required>
+        <input type="text" id="day" placeholder="Jour" required>
+        <button type="submit">Ajouter</button>
+    </form>
+
+    <!-- Liste des cours -->
+    <table class="student-table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Professeur</th>
+                <th>Classe</th>
+                <th>Horaires</th>
+                <th>Jour</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="courseTableBody">
+            <!-- Les cours seront ajoutés ici -->
+        </tbody>
+    </table>
+</div>
+
+<style>
+/* Conteneur principal */
+.content-wrapper {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Titre */
+.content-wrapper h2 {
+    color: #0044cc;
+    margin-bottom: 20px;
+}
+
+/* Formulaire */
+.student-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.student-form input, .student-form select {
+    flex: 1 1 150px;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.student-form button {
+    background-color: #0044cc;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.student-form button:hover {
+    background-color: #003399;
+}
+
+/* Tableau */
+.student-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.student-table th, .student-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.student-table th {
+    background-color: #0044cc;
+    color: white;
+}
+
+.student-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.student-table button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+}
+
+.student-table button:nth-child(1) { /* Supprimer */
+    background-color: #e74c3c;
+}
+
+.student-table button:nth-child(1):hover {
+    background-color: #c0392b;
+}
+
+.student-table button:nth-child(2) { /* Modifier */
+    background-color: #f39c12;
+}
+
+.student-table button:nth-child(2):hover {
+    background-color: #d68910;
+}
+</style>
+
+<script>
+const courseForm = document.getElementById('addCourseForm');
+const courseTableBody = document.getElementById('courseTableBody');
+let courses = [];
+
+courseForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const course = {
+        name: document.getElementById('courseName').value,
+        prof: document.getElementById('courseProf').value,
+        classe: document.getElementById('courseClass').value,
+        start: document.getElementById('startTime').value,
+        end: document.getElementById('endTime').value,
+        day: document.getElementById('day').value
+    };
+    courses.push(course);
+    renderCourses();
+    courseForm.reset();
+});
+
+function renderCourses() {
+    courseTableBody.innerHTML = '';
+    courses.forEach((c, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${c.name}</td>
+            <td>${c.prof}</td>
+            <td>${c.classe}</td>
+            <td>${c.start} - ${c.end}</td>
+            <td>${c.day}</td>
+            <td>
+                <button onclick="deleteCourse(${index})">Supprimer</button>
+                <button onclick="editCourse(${index})">Modifier</button>
+            </td>
+        `;
+        courseTableBody.appendChild(row);
+    });
+}
+
+function deleteCourse(index) {
+    courses.splice(index, 1);
+    renderCourses();
+}
+
+function editCourse(index) {
+    const c = courses[index];
+    document.getElementById('courseName').value = c.name;
+    document.getElementById('courseProf').value = c.prof;
+    document.getElementById('courseClass').value = c.classe;
+    document.getElementById('startTime').value = c.start;
+    document.getElementById('endTime').value = c.end;
+    document.getElementById('day').value = c.day;
+    deleteCourse(index);
+}
+</script>

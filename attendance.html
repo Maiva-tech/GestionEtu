@@ -1,0 +1,126 @@
+<div class="content-wrapper">
+    <h2>Prise de Présence</h2>
+
+    <!-- Sélection du cours -->
+    <label for="selectCourse">Choisir le cours :</label>
+    <select id="selectCourse" class="student-form-select"></select>
+
+    <!-- Tableau des étudiants pour présence -->
+    <table class="student-table">
+        <thead>
+            <tr>
+                <th>Étudiant</th>
+                <th>Présent</th>
+            </tr>
+        </thead>
+        <tbody id="attendanceTable">
+            <!-- Les étudiants seront ajoutés ici -->
+        </tbody>
+    </table>
+
+    <button id="saveAttendance" class="student-form-button">Enregistrer</button>
+</div>
+
+<style>
+/* Conteneur principal */
+.content-wrapper {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Titre */
+.content-wrapper h2 {
+    color: #0044cc;
+    margin-bottom: 20px;
+}
+
+/* Select */
+.student-form-select {
+    padding: 8px 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Tableau */
+.student-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.student-table th, .student-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.student-table th {
+    background-color: #0044cc;
+    color: white;
+}
+
+.student-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Bouton */
+.student-form-button {
+    background-color: #0044cc;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.student-form-button:hover {
+    background-color: #003399;
+}
+</style>
+
+<script>
+const students = [
+    {name:"Alice"}, {name:"Bob"}, {name:"Charlie"}
+];
+
+const courses = ["Maths","Physique","Informatique"];
+const selectCourse = document.getElementById('selectCourse');
+courses.forEach(c => {
+    const option = document.createElement('option');
+    option.value = c;
+    option.textContent = c;
+    selectCourse.appendChild(option);
+});
+
+const attendanceTable = document.getElementById('attendanceTable');
+
+function renderAttendance() {
+    attendanceTable.innerHTML = '';
+    students.forEach((s,i) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${s.name}</td>
+            <td><input type="checkbox" id="present_${i}"></td>
+        `;
+        attendanceTable.appendChild(row);
+    });
+}
+
+renderAttendance();
+
+document.getElementById('saveAttendance').addEventListener('click', () => {
+    const attendance = students.map((s,i) => ({
+        student: s.name,
+        present: document.getElementById(`present_${i}`).checked
+    }));
+    console.log("Présences enregistrées :", attendance);
+    alert("Présences enregistrées dans la console (simulation) !");
+});
+</script>

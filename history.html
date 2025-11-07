@@ -1,0 +1,132 @@
+<div class="content-wrapper">
+    <h2>Historique des Présences</h2>
+
+    <div class="history-controls">
+        <label for="filterCourse">Filtrer par cours :</label>
+        <select id="filterCourse">
+            <option value="Maths">Maths</option>
+            <option value="Physique">Physique</option>
+            <option value="Informatique">Informatique</option>
+        </select>
+        <button id="printHistory">Imprimer</button>
+    </div>
+
+    <table class="student-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Cours</th>
+                <th>Étudiant</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody id="historyTable">
+            <!-- Les entrées de présence seront ajoutées ici -->
+        </tbody>
+    </table>
+</div>
+
+<style>
+/* Conteneur principal */
+.content-wrapper {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Titre */
+.content-wrapper h2 {
+    color: #0044cc;
+    margin-bottom: 20px;
+}
+
+/* Contrôles (filtre + bouton) */
+.history-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.history-controls select {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.history-controls button {
+    background-color: #0044cc;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.history-controls button:hover {
+    background-color: #003399;
+}
+
+/* Tableau */
+.student-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.student-table th, .student-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.student-table th {
+    background-color: #0044cc;
+    color: white;
+}
+
+.student-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+</style>
+
+<script>
+const historyTable = document.getElementById('historyTable');
+const filterCourse = document.getElementById('filterCourse');
+
+const sampleHistory = [
+    {date:"2025-11-06",course:"Maths",student:"Alice",status:"Présent"},
+    {date:"2025-11-06",course:"Maths",student:"Bob",status:"Absent"},
+    {date:"2025-11-05",course:"Physique",student:"Charlie",status:"Présent"},
+];
+
+function renderHistory(course) {
+    historyTable.innerHTML = '';
+    const filtered = sampleHistory.filter(h => h.course === course);
+    filtered.forEach(h => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${h.date}</td>
+            <td>${h.course}</td>
+            <td>${h.student}</td>
+            <td>${h.status}</td>
+        `;
+        historyTable.appendChild(row);
+    });
+}
+
+filterCourse.addEventListener('change', () => {
+    renderHistory(filterCourse.value);
+});
+
+document.getElementById('printHistory').addEventListener('click', () => {
+    window.print();
+});
+
+// Affichage initial
+renderHistory(filterCourse.value);
+</script>
